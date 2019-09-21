@@ -5,11 +5,16 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using AspNetCore.Identity.MongoDB;
+using AutoMapper;
 using DTOs;
+using Entities;
+using Helpers;
+using Interface;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Settings;
 
 namespace MagaluApi.Controllers
 {
@@ -18,13 +23,18 @@ namespace MagaluApi.Controllers
     [Route("[controller]")]
     public class AdminController : ControllerBase
     {
-        private readonly UserManager<MongoIdentityUser> _userManager;
-        private readonly SignInManager<MongoIdentityUser> _signInManager;
+        private IAdminService _adminService;
+        private IMapper _mapper;
+        private readonly AppSettings _appSettings;
 
-        public AdminController(UserManager<MongoIdentityUser> userManager, SignInManager<MongoIdentityUser> signInManager)
+        public AdminController(
+            IAdminService adminService,
+            IMapper mapper,
+            IOptions<AppSettings> appSettings)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _adminService = adminService;
+            _mapper = mapper;
+            _appSettings = appSettings.Value;
         }
 
         [AllowAnonymous]
@@ -35,58 +45,100 @@ namespace MagaluApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("register")]       
-        public async Task<IActionResult> Register([FromBody]UserDTO userDto)
+        [HttpPost("login")]
+        public IActionResult Login([FromBody]UserDTO userDto)
         {
-            if (ModelState.IsValid)
-            {
-                var user = new MongoIdentityUser(userDto.Username, userDto.Username);
-                var result = await _userManager.CreateAsync(user, userDto.Password);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                }
-            }
+            var user = _adminService.Login(userDto.Username, userDto.Password);
 
-            // If we got this far, something failed, redisplay form
-            return Ok("Registrado com sucesso");
+            if (user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            // return basic user info (without password) and token to store client side
+            return Ok(new
+            {
+                Id = user.Id,
+                Username = user.Username,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Token = tokenString
+            });
         }
 
         [AllowAnonymous]
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody]UserDTO userDto)
+        [HttpPost("register")]
+        public IActionResult Register([FromBody]UserDTO userDto)
         {
-            //var user = ""; //_adminService.Login(userDto.Username, userDto.Password);           
+            // map dto to entity
+            var user = _mapper.Map<User>(userDto);
 
-            //if (user == null)
-            //    return BadRequest(new { message = "Username or password is incorrect" });
-            //else
-            //    await _signInManager.SignInAsync(null, isPersistent: false);
+            try
+            {
+                // save 
+                _adminService.CreateUser(user, userDto.Password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
-            //var tokenHandler = new JwtSecurityTokenHandler();
-            //var key = Encoding.ASCII.GetBytes(AppSettings.Secret);
-            //var tokenDescriptor = new SecurityTokenDescriptor
-            //{
-            //    Subject = new ClaimsIdentity(new Claim[]
-            //    {
-            //        new Claim(ClaimTypes.Name, user.Id.ToString())
-            //    }),
-            //    Expires = DateTime.UtcNow.AddDays(7),
-            //    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            //};
-            //var token = tokenHandler.CreateToken(tokenDescriptor);
-            //var tokenString = tokenHandler.WriteToken(token);
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var users = _adminService.GetAllUsers();
+            var userDtos = _mapper.Map<IList<UserDTO>>(users);
+            return Ok(userDtos);
+        }
 
-            //// return basic user info (without password) and token to store client side
-            //return Ok(new
-            //{
-            //    Id = user.Id,
-            //    Username = user.Username,
-            //    FirstName = user.FirstName,
-            //    LastName = user.LastName,
-            //    Token = tokenString
-            //});
-            return Ok("");
+        [HttpGet("{id}")]
+        public IActionResult GetById(int id)
+        {
+            var user = _adminService.GetUserById(id);
+            var userDto = _mapper.Map<UserDTO>(user);
+            return Ok(userDto);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody]UserDTO userDto)
+        {
+            // map dto to entity and set id
+            var user = _mapper.Map<User>(userDto);
+            user.Id = id;
+
+            try
+            {
+                // save 
+                _adminService.UpdateUser(user, userDto.Password);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _adminService.DeleteUser(id);
+            return Ok();
         }
     }
 }

@@ -1,10 +1,34 @@
 version: "3.5"
 
 services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'magaluDB'      
+      MYSQL_USER: 'admin'      
+      MYSQL_PASSWORD: 'magalu123'     
+      MYSQL_ROOT_PASSWORD: 'magalu123'
+    ports:     
+      - '3306:3306'
+    expose:      
+      - '3306'      
+
   mongo:
-    container_name: magalu
-    image: mongo:latest
-    ports:
-      - 27017:27017
+      image: mongo:latest
+      environment:
+        - MONGO_INITDB_ROOT_USERNAME=root
+        - MONGO_INITDB_ROOT_PASSWORD=magalu123!
+        - MONGO_INITDB_DATABASE=magalu
+      ports:
+        - "27017:27017"
+    
+ 
+    
+    
+   
+
+    
+   
 
   
