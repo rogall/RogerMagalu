@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DTOs;
-using Entities;
 using Helpers;
 using Interface;
 using Microsoft.AspNetCore.Authorization;
@@ -19,7 +18,7 @@ using Settings;
 namespace MagaluApi.Controllers
 {
     [Authorize]
-    [ApiController]
+    //[ApiController]
     [Route("[controller]")]
     public class AdminController : ControllerBase
     {
@@ -48,7 +47,7 @@ namespace MagaluApi.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody]UserDTO userDto)
         {
-            var user = _adminService.Login(userDto.Username, userDto.Password);
+            var user = _adminService.Login(userDto.UserName, userDto.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -70,10 +69,10 @@ namespace MagaluApi.Controllers
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
-                Id = user.Id,
-                Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                //Id = user.Id,
+                //Username = user.Username,
+                //FirstName = user.FirstName,
+                //LastName = user.LastName,
                 Token = tokenString
             });
         }
@@ -81,8 +80,7 @@ namespace MagaluApi.Controllers
         [AllowAnonymous]
         [HttpPost("register")]
         public IActionResult Register([FromBody]UserDTO userDto)
-        {
-            // map dto to entity
+        {            
             var user = _mapper.Map<User>(userDto);
 
             try
@@ -107,7 +105,7 @@ namespace MagaluApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public IActionResult GetById(string id)
         {
             var user = _adminService.GetUserById(id);
             var userDto = _mapper.Map<UserDTO>(user);
@@ -115,7 +113,7 @@ namespace MagaluApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UserDTO userDto)
+        public IActionResult Update(string id, [FromBody]UserDTO userDto)
         {
             // map dto to entity and set id
             var user = _mapper.Map<User>(userDto);

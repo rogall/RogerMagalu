@@ -1,16 +1,36 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Entities
 {
-    public class MagaluDbContext : DbContext
+    public class MagaluDbContext : IdentityDbContext<global::User>
     {
-        public MagaluDbContext(DbContextOptions<MagaluDbContext> options) : base(options) { }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseMySql(GetConnectionString());
+        }
 
-        public DbSet<User> Users { get; set; }
+        private static string GetConnectionString()
+        {
+            const string databaseName = "magaluDB";
+            const string databaseUser = "admin";
+            const string databasePass = "magalu123";
+
+            return $"Server=127.0.0.1;Port=3306;" +
+                   $"database={databaseName};" +
+                   $"Uid={databaseUser};" +
+                   $"Pwd={databasePass};";
+        }
+
+        public static MagaluDbContext Create()
+        {
+            return new MagaluDbContext();
+        }
     }
+}
+
+public class User : IdentityUser
+{
+
 }

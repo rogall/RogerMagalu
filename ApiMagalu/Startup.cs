@@ -1,20 +1,14 @@
-﻿using AspNetCore.Identity.MongoDB;
-using AutoMapper;
+﻿using AutoMapper;
 using Concrete;
 using Entities;
-using Helpers;
 using Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using MongoDB.Driver;
 using Settings;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,25 +27,18 @@ namespace ApiMagalu
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             services.AddCors();
+            // ===== Add our DbContext ========
+            services.AddDbContext<MagaluDbContext>();
 
-            services.Configure<MongoDBSettings>(Configuration.GetSection("MongoDb"));
+            // ===== Add Identity ========
+            services.AddIdentity<User, IdentityRole>()
+               .AddEntityFrameworkStores<MagaluDbContext>()
+               .AddDefaultTokenProviders();
 
-            services.AddSingleton<IUserStore<MongoIdentityUser>>(provider =>
-            {
-                var options = provider.GetService<IOptions<MongoDBSettings>>();
-                var client = new MongoClient(options.Value.ConnectionString);
-                var database = client.GetDatabase(options.Value.DatabaseName);
-
-                return MongoUserStore<MongoIdentityUser>.CreateAsync(database).GetAwaiter().GetResult();
-            });
-
-            services.AddIdentityCore<MongoIdentityUser>()
-                .AddDefaultTokenProviders();
-
-            services.AddDbContext<MagaluDbContext>(x => x.UseInMemoryDatabase("DBtest"));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            //services.AddAutoMapper();
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddAutoMapper();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -71,7 +58,7 @@ namespace ApiMagalu
                     OnTokenValidated = context =>
                     {
                         var userService = context.HttpContext.RequestServices.GetRequiredService<IAdminService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
+                        string userId = context.Principal.Identity.Name;
                         var user = userService.GetUserById(userId);
                         if (user == null)
                         {
@@ -108,3 +95,4 @@ namespace ApiMagalu
         }
     }
 }
+

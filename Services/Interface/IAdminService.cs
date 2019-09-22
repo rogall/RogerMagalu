@@ -9,7 +9,7 @@ namespace Interface
     {
         User Login(string username, string password);
         IEnumerable<User> GetAllUsers();
-        User GetUserById(int id);
+        User GetUserById(string id);
         User CreateUser(User user, string password);
         void UpdateUser(User user, string password = null);
         void DeleteUser(int id);

@@ -1,7 +1,5 @@
 using AutoMapper;
 using DTOs;
-using Entities;
-
 namespace Helpers
 {
     public class Mapper : Profile
