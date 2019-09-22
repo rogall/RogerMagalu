@@ -124,16 +124,6 @@ namespace Concrete
                 passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
             }
         }
-
-        private static bool VerifyPasswordHash(string password, byte[] storedHash)
-        {
-            if (password == null) throw new ArgumentNullException("password");
-            if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Senha não pode ser nula ou vazia.", "password");
-            if (storedHash.Length != 64) throw new ArgumentException("Tamanho inválido (64 bytes).", "passwordHash");
-            
-            
-            return true;
-        }
         #endregion
     }
 }
