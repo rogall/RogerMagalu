@@ -69,10 +69,9 @@ namespace MagaluApi.Controllers
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
-                //Id = user.Id,
-                //Username = user.Username,
-                //FirstName = user.FirstName,
-                //LastName = user.LastName,
+                Id = user.Id,
+                Username = user.UserName,
+                Email = user.Email,
                 Token = tokenString
             });
         }

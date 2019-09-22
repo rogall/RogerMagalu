@@ -3,6 +3,7 @@ using Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Concrete
 {
@@ -15,19 +16,24 @@ namespace Concrete
             _context = context;
         }
 
-        public User Login(string username, string password)
+        public User Login(string email, string password)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.Users.SingleOrDefault(x => x.UserName == username);
+            var user = _context.Users.SingleOrDefault(x => x.Email == email);
 
             // check if username exists
             if (user == null)
                 return null;
 
-            //// check if password is correct
-            //if (!VerifyPasswordHash(password, user.PasswordHash))
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            string PasswordHash = Convert.ToBase64String(passwordHash);
+
+            // check if password is correct
+            //if (PasswordHash != user.PasswordHash)
             //    return null;
 
             // authentication successful
@@ -45,8 +51,10 @@ namespace Concrete
             if (string.IsNullOrWhiteSpace(password))
                 throw new Exception("Password is required");
 
-            if (_context.Users.Any(x => x.UserName == user.UserName))
-                throw new Exception("Username \"" + user.UserName + "\" is already taken");
+            if (_context.Users.Any(x => x.Email == user.Email))
+                throw new Exception("Username \"" + user.Email + "\" is already taken");
+
+            user.Id = Guid.NewGuid().ToString();            
 
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);

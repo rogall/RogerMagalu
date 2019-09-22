@@ -14,14 +14,7 @@ services:
     expose:      
       - '3306'      
 
-  mongo:
-      image: mongo:latest
-      environment:
-        - MONGO_INITDB_ROOT_USERNAME=root
-        - MONGO_INITDB_ROOT_PASSWORD=magalu123!
-        - MONGO_INITDB_DATABASE=magalu
-      ports:
-        - "27017:27017"
+  
     
  
     
