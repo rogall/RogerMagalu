@@ -28,5 +28,7 @@ namespace Entities.Mongo
 
         [BsonElement("Preco")]
         public double Preco { get; set; }
+
+        public string Tipo { get; set; }
     }
 }

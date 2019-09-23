@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Entities.MagaluApiProdutos;
+using Entities.Mongo;
 using EntitiesMongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,20 +18,16 @@ namespace ApiMagalu.Controllers
     [Authorize]
     public class ClientesController : ControllerBase
     {
-        private readonly IClientesService _clientesService;
-        private readonly IProdutosService _produtosService;
+        private readonly IClientesService _clientesService;        
 
-        public ClientesController(ClientesService clientesService, ProdutosService produtosService)
+        public ClientesController(ClientesService clientesService)
         {
-            _clientesService = clientesService;
-            _produtosService = produtosService;
+            _clientesService = clientesService;           
         }
 
         [HttpGet]
         public ActionResult<List<Cliente>> Get()
-        {
-            //var prod = _produtosService.GetProduto("958ec015-cfcf-258d-c6df-1721de0ab6ea");
-            var prods = _produtosService.GetProdutos(1);
+        {           
             var ret = _clientesService.GetAllClientes();
             return ret;
         }
@@ -93,18 +90,20 @@ namespace ApiMagalu.Controllers
             return NoContent();
         }
 
-        [HttpGet(Name = "GetProdutos")]
-        public async Task<List<Produto>> GetProdutos(int pagination)
+        [HttpPost]
+        [Route("AddOrRemoveProduto")]
+        public ActionResult AddOrRemoveProduto(ProdutoCliente pc)
         {
-            var ret = await _produtosService.GetProdutos(pagination);
-            return ret;
-        }
+            if (pc.Tipo == "1")
+            {             
+                _clientesService.AddProduto(pc);
+            }
+            else
+            {
+                _clientesService.RemoveProduto(pc.IdProduto, pc.IdCliente);
+            }
 
-        [HttpGet(Name = "GetProduto")]
-        public async Task<Produto> GetProduto(string id)
-        {
-            var ret = await _produtosService.GetProduto(id);
-            return ret;
+            return NoContent();
         }
     }
 }

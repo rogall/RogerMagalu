@@ -14,6 +14,7 @@ namespace Services.Interface
         void UpdateCliente(string id, Cliente cliente);
         void DeleteCliente(Cliente cliente);
         ProdutoCliente AddProduto(ProdutoCliente produto);
+        void RemoveProduto(string idP, string idC);
         List<ProdutoCliente> GetProdutosByClienteId(string id);
         Cliente GetClienteByEmail(string email);
     }

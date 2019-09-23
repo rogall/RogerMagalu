@@ -1,8 +1,8 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
-
+import { ActivatedRoute } from '@angular/router';
 import { User } from '../_models';
-import { Cliente } from '../_models';
+import { Produto } from '../_models';
 import { UserService } from '../_services';
 import { ClientesService } from '../_services';
 
@@ -10,25 +10,39 @@ import { ClientesService } from '../_services';
 export class ProdutosComponent implements OnInit {
     currentUser: User;
     users: User[] = [];
-    clientes: Cliente[] = [];
+    produtos: Produto[] = [];
+    nome: string;
+    idCliente: string;   
 
-    constructor(private userService: UserService, private clientesService: ClientesService) {
+    constructor(private userService: UserService, private clientesService: ClientesService, private route: ActivatedRoute) {
         this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     }
 
     ngOnInit() {
-        this.loadAllClientes();
+        this.nome = this.route.snapshot.queryParams["nome"];
+        this.idCliente = this.route.snapshot.queryParams["id"];
+        this.loadAllProdutos();
     }
 
-    deleteCliente(id: string) {
-        this.clientesService.delete(id).pipe(first()).subscribe(() => { 
-            this.loadAllClientes() 
+    addFavorito(produto: Produto) {         
+        produto.idCliente = this.idCliente;         
+        produto.tipo = "1";       
+        this.clientesService.addFavorito(produto).pipe(first()).subscribe(() => { 
+            this.loadAllProdutos() 
         });
     }
 
-    private loadAllClientes() {
-        this.clientesService.getAll().pipe(first()).subscribe(clientes => { 
-            this.clientes = clientes; 
+    removeFavorito(produto: Produto) {         
+        produto.idCliente = this.idCliente;  
+        produto.tipo = "0";         
+        this.clientesService.removeFavorito(produto).pipe(first()).subscribe(() => { 
+            this.loadAllProdutos() 
+        });
+    }
+
+    private loadAllProdutos() {
+        this.clientesService.getAllProdutos(1).pipe(first()).subscribe(produtos => { 
+            this.produtos = produtos; 
         });
     }
 }

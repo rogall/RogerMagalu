@@ -13,5 +13,7 @@ namespace Entities.MagaluApiProdutos
         public string Imagem { get; set; }
        
         public double Preco { get; set; }
+
+        public bool IsFavorito { get; set; }
     }
 }

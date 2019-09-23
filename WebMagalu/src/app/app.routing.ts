@@ -12,7 +12,7 @@ const appRoutes: Routes = [
     { path: 'login', component: LoginComponent },
     { path: 'register', component: RegisterComponent },
     { path: 'saveCliente', component: ClienteComponent },   
-    { path: 'produtos', component: ProdutosComponent }, 
+    { path: 'listFavoritos', component: ProdutosComponent }, 
     { path: '**', redirectTo: '' }
 ];
 

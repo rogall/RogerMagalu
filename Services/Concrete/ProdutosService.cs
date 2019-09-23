@@ -37,6 +37,7 @@ namespace Services.Concrete
                     p.Imagem = item.image;
                     p.Preco = item.price;
                     p.Titulo = item.title;
+                    p.IsFavorito = false;
                     result.Add(p);
                 }
             }

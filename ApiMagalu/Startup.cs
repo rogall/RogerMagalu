@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Services.Concrete;
+using Services.Interface;
 using Settings;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,10 +89,11 @@ namespace ApiMagalu
                     ValidateAudience = false
                 };
             });
+            
 
             services.AddMvc();
 
-            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IAdminService, AdminService>();            
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

@@ -21,8 +21,7 @@
             <td>{{cliente.email}}</td>
             <td><a [routerLink]="['/']" (click)="deleteCliente(cliente.id)" >Delete</a></td>
             <td><a [routerLink]="['/saveCliente']" [queryParams]="{id: cliente.id,  nome:cliente.nome, email:cliente.email}">Atualizar</a></td>
-            <td><a [routerLink]="['/listFavoritos']"  [queryParams]="{id: cliente.id,  nome:cliente.nome}" >Listar produtos favoritos</a></td>
-            <td><a [routerLink]="['/addFavoritos']" [queryParams]="{id: cliente.id,  nome:cliente.nome}">Adicionar produtos favoritos</a></td>
+            <td><a [routerLink]="['/listFavoritos']"  [queryParams]="{id: cliente.id,  nome:cliente.nome}" >Listar produtos</a></td>           
           </tr>          
         </tbody>
       </table>

@@ -50,6 +50,11 @@ namespace Services.Concrete
             return produtoCliente;
         }
 
+        public void RemoveProduto(string idP, string idC)
+        {
+            _produtosClientes.DeleteOne(cl => cl.IdCliente == idC && cl.IdProduto == idP);            
+        }
+
         public List<ProdutoCliente> GetProdutosByClienteId(string id) =>
            _produtosClientes.Find(_produtosClientes => _produtosClientes.IdCliente == id).ToList();
 

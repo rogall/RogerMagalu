@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Cliente } from '../_models';
+import { Cliente, Produto } from '../_models';
 
 @Injectable()
 export class ClientesService {
@@ -25,5 +25,17 @@ export class ClientesService {
 
     delete(id: string) {
         return this.http.delete(`${config.apiUrl}/Clientes/` + id);
+    }   
+
+    addFavorito(produto: Produto){           
+        return this.http.post(`${config.apiUrl}/Clientes/AddOrRemoveProduto`, produto);
     }
+
+    removeFavorito(produto: Produto){               
+        return this.http.post(`${config.apiUrl}/Clientes/AddOrRemoveProduto`, produto);
+    }
+
+    getAllProdutos(paginacao: number){
+        return this.http.get<Produto[]>(`${config.apiUrl}/Produtos`);
+    }    
 }
