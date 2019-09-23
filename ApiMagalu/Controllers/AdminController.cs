@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using DTOs;
-using Helpers;
-using Interface;
+using Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -23,64 +23,91 @@ namespace MagaluApi.Controllers
     [Route("[controller]")]
     public class AdminController : ControllerBase
     {
-        private IAdminService _adminService;
-        private IMapper _mapper;
-        private readonly AppSettings _appSettings;
-
+        private readonly MagaluDbContext _context;
         private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private IMapper _mapper;
 
         public AdminController(
-            IAdminService adminService,
-            IMapper mapper,
-            IOptions<AppSettings> appSettings,
+            MagaluDbContext context,
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            IMapper mapper)
         {
-            _adminService = adminService;
+            _context = context;
+            _userManager = userManager;
             _mapper = mapper;
-            _appSettings = appSettings.Value;
-        }
+        }      
 
-        [AllowAnonymous]
-        [HttpGet("health")]
-        public IActionResult Health()
-        {
-            return Ok("App is running");
-        }
-
+        
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login([FromBody]UserDTO userDto)
+        public IActionResult Post(
+            [FromBody]UserDTO userDto,
+            [FromServices]UserManager<User> userManager,
+            [FromServices]SignInManager<User> signInManager,
+            [FromServices]SigningConfigurations signingConfigurations)
         {
-            var user = _adminService.Login(userDto.UserName, userDto.Password);
-
-            if (user == null)
-                return BadRequest(new { message = "Username or password is incorrect" });
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            bool credenciaisValidas = false;
+            if (userDto != null)
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                // Verifica a existência do usuário nas tabelas do
+                // ASP.NET Core Identity
+                var userIdentity = userManager.Users.FirstOrDefault(_ => _.Email == userDto.Email);
+                if (userIdentity != null)
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+                    // Efetua o login com base no Id do usuário e sua senha
+                    var resultadoLogin = signInManager
+                        .CheckPasswordSignInAsync(userIdentity, userDto.Password, false)
+                        .Result;
+                    userDto.Id = userIdentity.Id;
+                    credenciaisValidas = resultadoLogin.Succeeded;
+                }
+            }
 
-            // return basic user info (without password) and token to store client side
-            return Ok(new
+            if (credenciaisValidas)
             {
-                Id = user.Id,
-                Username = user.UserName,
-                Email = user.Email,
-                Token = tokenString
-            });
-        }
+                ClaimsIdentity identity = new ClaimsIdentity(
+                    new GenericIdentity(userDto.Id, "Login"),
+                    new[] {
+                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString("N")),
+                        new Claim(JwtRegisteredClaimNames.UniqueName, userDto.Id)
+                    }
+                );
+
+                DateTime dataCriacao = DateTime.Now;
+                DateTime dataExpiracao = DateTime.UtcNow.AddDays(7);
+
+                var handler = new JwtSecurityTokenHandler();
+                var securityToken = handler.CreateToken(new SecurityTokenDescriptor
+                {                    
+                    SigningCredentials = signingConfigurations.SigningCredentials,
+                    Subject = identity,
+                    NotBefore = dataCriacao,
+                    Expires = dataExpiracao
+                });
+
+                var token = handler.WriteToken(securityToken);
+
+                return Ok(new
+                {
+                    Id = userDto.Id,
+                    Username = userDto.UserName,
+                    Email = userDto.Email,
+                    Token = token,
+                    authenticated = true,
+                    created = dataCriacao.ToString("yyyy-MM-dd HH:mm:ss"),
+                    expiration = dataExpiracao.ToString("yyyy-MM-dd HH:mm:ss"),
+                    message = "OK"
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    authenticated = false,
+                    message = "Falha ao autenticar"
+                });
+            }
+        }    
 
         [AllowAnonymous]
         [HttpPost("register")]
@@ -90,13 +117,7 @@ namespace MagaluApi.Controllers
 
             try
             {
-                //var result = await _userManager.CreateAsync(user, userDto.Password);
-                //if (result.Succeeded)
-                //{
-                //    await _signInManager.SignInAsync(user, isPersistent: false);
-                //}
-
-                _adminService.CreateUser(user, userDto.Password);
+                CreateUser(user, userDto.Password);
                 return Ok();
             }
             catch (Exception ex)
@@ -106,47 +127,14 @@ namespace MagaluApi.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult GetAll()
+        private void CreateUser(User user, string password)
         {
-            var users = _adminService.GetAllUsers();
-            var userDtos = _mapper.Map<IList<UserDTO>>(users);
-            return Ok(userDtos);
-        }
-
-        [HttpGet("{id}")]
-        public IActionResult GetById(string id)
-        {
-            var user = _adminService.GetUserById(id);
-            var userDto = _mapper.Map<UserDTO>(user);
-            return Ok(userDto);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Update(string id, [FromBody]UserDTO userDto)
-        {
-            // map dto to entity and set id
-            var user = _mapper.Map<User>(userDto);
-            user.Id = id;
-
-            try
+            if (_userManager.FindByEmailAsync(user.Email).Result == null)
             {
-                // save 
-                _adminService.UpdateUser(user, userDto.Password);
-                return Ok();
+                var resultado = _userManager
+                    .CreateAsync(user, password).Result;                
             }
-            catch (Exception ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _adminService.DeleteUser(id);
-            return Ok();
         }
     }
 }
+

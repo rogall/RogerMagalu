@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Concrete;
 using Entities;
 using Entities.Settings;
-using Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -30,7 +28,8 @@ namespace ApiMagalu
         public IConfiguration Configuration { get; }
                
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            //EM PRODUCÃO DEVE-SE REMOVER OS CORS
             services.AddCors();
             // ===== Add our DbContext ========
             services.AddDbContext<MagaluDbContext>();
@@ -45,6 +44,9 @@ namespace ApiMagalu
 
             services.AddSingleton<IMongoDBSettings>(sp =>
                 sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+
+            var signingConfigurations = new SigningConfigurations();
+            services.AddSingleton(signingConfigurations);
 
             services.AddSingleton<ClientesService>();
             services.AddSingleton<ProdutosService>();
@@ -67,17 +69,17 @@ namespace ApiMagalu
             {
                 x.Events = new JwtBearerEvents
                 {
-                    OnTokenValidated = context =>
-                    {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IAdminService>();
-                        string userId = context.Principal.Identity.Name;
-                        var user = userService.GetUserById(userId);
-                        if (user == null)
-                        {
-                            context.Fail("Unauthorized");
-                        }
-                        return Task.CompletedTask;
-                    }
+                    //OnTokenValidated = context =>
+                    //{
+                    //    var userService = context.HttpContext.RequestServices.GetRequiredService<null>();
+                    //    string userId = context.Principal.Identity.Name;
+                    //    var user = userService.GetUserById(userId);
+                    //    if (user == null)
+                    //    {
+                    //        context.Fail("Unauthorized");
+                    //    }
+                    //    return Task.CompletedTask;
+                    //}
                 };
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
@@ -88,17 +90,14 @@ namespace ApiMagalu
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-            });
-            
+            });            
 
-            services.AddMvc();
-
-            services.AddScoped<IAdminService, AdminService>();            
+            services.AddMvc();                      
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
-            // global cors policy
+        {          
+            //EM PRODUCÃO DEVE-SE REMOVER OS CORS
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
