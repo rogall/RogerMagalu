@@ -1,14 +1,18 @@
 ﻿using AutoMapper;
 using Concrete;
 using Entities;
+using Entities.Settings;
 using Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Services.Concrete;
 using Settings;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,7 +41,15 @@ namespace ApiMagalu
                .AddEntityFrameworkStores<MagaluDbContext>()
                .AddDefaultTokenProviders();
 
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.Configure<MongoDBSettings>(
+                Configuration.GetSection(nameof(MongoDBSettings)));
+
+            services.AddSingleton<IMongoDBSettings>(sp =>
+                sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
+
+            services.AddSingleton<ClientesService>();
+           
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper();
 
             var appSettingsSection = Configuration.GetSection("AppSettings");

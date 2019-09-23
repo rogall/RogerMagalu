@@ -18,7 +18,7 @@ using Settings;
 namespace MagaluApi.Controllers
 {
     [Authorize]
-    //[ApiController]
+    [ApiController]
     [Route("[controller]")]
     public class AdminController : ControllerBase
     {
