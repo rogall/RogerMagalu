@@ -9,7 +9,7 @@ namespace Services.Interface
 {
     public interface IProdutosService
     {
-        Task<List<Produto>> GetProdutos(int pagination);
+        Task<List<Produto>> GetProdutos(int pagination, string idCliente);
         Task<Produto> GetProduto(string id);
     }
 }

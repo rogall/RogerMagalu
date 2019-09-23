@@ -14,7 +14,7 @@ namespace ApiMagalu.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutosService _produtosService;       
@@ -25,9 +25,10 @@ namespace ApiMagalu.Controllers
         }
 
         [HttpGet]
-        public async Task<List<Produto>> Get()
+        [Route("GetProdutos")]
+        public async Task<List<Produto>> GetProdutos(int id, string idCliente)
         {
-            var ret = await _produtosService.GetProdutos(1);
+            var ret = await _produtosService.GetProdutos(id, idCliente);
             return ret;
         }        
     }

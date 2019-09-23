@@ -10,6 +10,7 @@ using DTOs;
 using Helpers;
 using Interface;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -26,10 +27,15 @@ namespace MagaluApi.Controllers
         private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
         public AdminController(
             IAdminService adminService,
             IMapper mapper,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _adminService = adminService;
             _mapper = mapper;
@@ -84,7 +90,12 @@ namespace MagaluApi.Controllers
 
             try
             {
-                // save 
+                //var result = await _userManager.CreateAsync(user, userDto.Password);
+                //if (result.Succeeded)
+                //{
+                //    await _signInManager.SignInAsync(user, isPersistent: false);
+                //}
+
                 _adminService.CreateUser(user, userDto.Password);
                 return Ok();
             }

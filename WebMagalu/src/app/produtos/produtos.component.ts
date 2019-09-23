@@ -41,7 +41,7 @@ export class ProdutosComponent implements OnInit {
     }
 
     private loadAllProdutos() {
-        this.clientesService.getAllProdutos(1).pipe(first()).subscribe(produtos => { 
+        this.clientesService.getAllProdutos(1, this.idCliente).pipe(first()).subscribe(produtos => { 
             this.produtos = produtos; 
         });
     }

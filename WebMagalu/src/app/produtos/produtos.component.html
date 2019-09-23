@@ -1,6 +1,6 @@
 ﻿<p><a [routerLink]="['/']">Voltar</a> | <a [routerLink]="['/login']">Logout</a></p>
 <h1>Hi {{currentUser.username}}!</h1>
-<h3>Lista Magalu de {{nome}}:</h3>
+<h3>Lista Magalu de {{nome}}</h3>
 <div>
     <table class="table">       
         <tbody *ngFor="let produto of produtos"> 
@@ -8,11 +8,15 @@
             <td>{{produto.titulo}} </td>
             <td>R$ {{produto.preco}}</td>
             <td><img src="{{produto.imagem}}"></td>            
-            <td ng-if="produto.isFavorito" ><a (click)="addFavorito(produto)"><img style="width: 40px; height:40px;" src="https://image.flaticon.com/icons/png/512/16/16078.png"/></a></td>         
-            <td ng-if="produto.isFavorito" ><a (click)="removeFavorito(produto)"><img style="width: 40px; height:40px;" src="https://cdn.pixabay.com/photo/2014/04/02/10/17/star-303363_960_720.png"/></a></td>         
+            <td [hidden]="produto.isFavorito"><a (click)="addFavorito(produto)"><img style="width: 40px; height:40px;" src="https://image.flaticon.com/icons/png/512/16/16078.png"/></a></td>         
+            <td [hidden]="!produto.isFavorito"><a (click)="removeFavorito(produto)"><img style="width: 40px; height:40px;" src="https://cdn.pixabay.com/photo/2014/04/02/10/17/star-303363_960_720.png"/></a></td>         
           </tr>          
         </tbody>
       </table>
 </div>
-
+<style>
+img:hover {
+  background-color: rgba(161, 158, 158, 0.911);
+}
+</style>
 

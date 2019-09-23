@@ -1,4 +1,6 @@
 ﻿using Entities.MagaluApiProdutos;
+using Entities.Mongo;
+using MongoDB.Driver;
 using Services.Interface;
 using System;
 using System.Collections.Generic;
@@ -7,13 +9,25 @@ using System.Net;
 using System.Runtime.Serialization.Json;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Services.Concrete
 {
     public class ProdutosService : IProdutosService
-    {       
-        public async Task<List<Produto>> GetProdutos(int pagination)
+    {
+        private readonly IClientesService _clientesService;
+
+        public ProdutosService(ClientesService service)
         {
+            _clientesService = service;
+        }
+
+        public async Task<List<Produto>> GetProdutos(int pagination, string idCliente)
+        {
+            //primeiramente recupero os produtos da lista de favoritos
+            var produtosFavoritosCliente = _clientesService.GetProdutosByClienteId(idCliente);
+            List<string> ids = produtosFavoritosCliente.Select(_ => _.IdProduto).ToList();
+
             String ret = string.Empty;
             List<Produto> result = new List<Produto>();
             ListProducts list = null;
@@ -26,7 +40,7 @@ namespace Services.Concrete
                 DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ListProducts));
                 MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(ret));
                 list = (ListProducts)serializer.ReadObject(ms);
-            }
+            }          
 
             if (list != null && list.products != null && list.products.Count > 0)
             {
@@ -37,7 +51,9 @@ namespace Services.Concrete
                     p.Imagem = item.image;
                     p.Preco = item.price;
                     p.Titulo = item.title;
-                    p.IsFavorito = false;
+
+                    //se o produto da lista da magalu estiver na lista de favoritos do cliente, setar favorito = true
+                    p.IsFavorito = ids.Contains(p.IdProduto);
                     result.Add(p);
                 }
             }

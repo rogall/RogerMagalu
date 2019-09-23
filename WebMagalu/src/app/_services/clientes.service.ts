@@ -35,7 +35,7 @@ export class ClientesService {
         return this.http.post(`${config.apiUrl}/Clientes/AddOrRemoveProduto`, produto);
     }
 
-    getAllProdutos(paginacao: number){
-        return this.http.get<Produto[]>(`${config.apiUrl}/Produtos`);
+    getAllProdutos(paginacao: number, idCliente: string){
+        return this.http.get<Produto[]>(`${config.apiUrl}/Produtos/GetProdutos?id=` + paginacao + "&idCliente=" + idCliente);
     }    
 }
