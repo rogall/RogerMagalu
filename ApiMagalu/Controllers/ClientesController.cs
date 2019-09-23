@@ -15,14 +15,16 @@ namespace ApiMagalu.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize("Bearer")]
     public class ClientesController : ControllerBase
     {
-        private readonly IClientesService _clientesService;        
+        private readonly IClientesService _clientesService;
+        private readonly IProdutosService _produtosService;
 
-        public ClientesController(ClientesService clientesService)
+        public ClientesController(ClientesService clientesService, ProdutosService produtosService)
         {
-            _clientesService = clientesService;           
+            _clientesService = clientesService;
+            _produtosService = produtosService;
         }
 
         [HttpGet]
@@ -83,6 +85,13 @@ namespace ApiMagalu.Controllers
             if (cliente == null)
             {
                 return NotFound();
+            }
+
+            var ret = _clientesService.GetProdutosByClienteId(id);
+
+            foreach (var item in ret)
+            {
+                _clientesService.RemoveProduto(item.IdProduto, id);
             }
 
             _clientesService.DeleteCliente(cliente);

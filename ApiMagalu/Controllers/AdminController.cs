@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using ApiMagalu.Settings;
 using AutoMapper;
 using DTOs;
 using Entities;
@@ -35,8 +36,7 @@ namespace MagaluApi.Controllers
             _context = context;
             _userManager = userManager;
             _mapper = mapper;
-        }      
-
+        } 
         
         [AllowAnonymous]
         [HttpPost("login")]
@@ -44,7 +44,8 @@ namespace MagaluApi.Controllers
             [FromBody]UserDTO userDto,
             [FromServices]UserManager<User> userManager,
             [FromServices]SignInManager<User> signInManager,
-            [FromServices]SigningConfigurations signingConfigurations)
+            [FromServices]SigningConfigurations signingConfigurations,
+            [FromServices]TokenConfigurations tokenConfigurations)
         {
             bool credenciaisValidas = false;
             if (userDto != null)
@@ -78,7 +79,9 @@ namespace MagaluApi.Controllers
 
                 var handler = new JwtSecurityTokenHandler();
                 var securityToken = handler.CreateToken(new SecurityTokenDescriptor
-                {                    
+                {
+                    Issuer = tokenConfigurations.Issuer,
+                    Audience = tokenConfigurations.Audience,
                     SigningCredentials = signingConfigurations.SigningCredentials,
                     Subject = identity,
                     NotBefore = dataCriacao,
@@ -118,7 +121,7 @@ namespace MagaluApi.Controllers
             try
             {
                 CreateUser(user, userDto.Password);
-                return Ok();
+                return NoContent();
             }
             catch (Exception ex)
             {
@@ -132,7 +135,17 @@ namespace MagaluApi.Controllers
             if (_userManager.FindByEmailAsync(user.Email).Result == null)
             {
                 var resultado = _userManager
-                    .CreateAsync(user, password).Result;                
+                    .CreateAsync(user, password).Result;
+
+                if (!resultado.Succeeded)
+                {
+                    string erro = "";
+                    foreach (var item in resultado.Errors)
+                    {
+                        erro += item.Description + " - ";
+                    }
+                    throw new Exception(erro);
+                }                    
             }
         }
     }

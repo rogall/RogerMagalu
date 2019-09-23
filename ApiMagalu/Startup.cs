@@ -1,7 +1,9 @@
-﻿using AutoMapper;
+﻿using ApiMagalu.Settings;
+using AutoMapper;
 using Entities;
 using Entities.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -9,12 +11,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Services.Concrete;
-using Services.Interface;
 using Settings;
+using System;
+using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiMagalu
 {
@@ -59,44 +61,80 @@ namespace ApiMagalu
 
             //jwt authentication
             var appSettings = appSettingsSection.Get<AppSettings>();
-            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
-            services.AddAuthentication(x =>
+
+            services.Configure<IdentityOptions>(options =>
+            {                
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;                
+            });
+
+            var tokenConfigurations = new TokenConfigurations();
+            new ConfigureFromConfigurationOptions<TokenConfigurations>(
+                Configuration.GetSection("TokenConfigurations"))
+                    .Configure(tokenConfigurations);
+            services.AddSingleton(tokenConfigurations);
+
+            services.AddAuthentication(authOptions =>
             {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(x =>
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(bearerOptions =>
             {
-                x.Events = new JwtBearerEvents
+                var paramsValidation = bearerOptions.TokenValidationParameters;
+                paramsValidation.IssuerSigningKey = signingConfigurations.Key;
+                paramsValidation.ValidAudience = tokenConfigurations.Audience;
+                paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
+
+                // Valida o token 
+                paramsValidation.ValidateIssuerSigningKey = true;
+
+                // Verifica se ainda é válido
+                paramsValidation.ValidateLifetime = true;                
+                paramsValidation.ClockSkew = TimeSpan.Zero;
+            });
+
+            // Ativa o uso do token para autorizacao           
+            services.AddAuthorization(auth =>
+            {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                    .RequireAuthenticatedUser().Build());
+            });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    //OnTokenValidated = context =>
-                    //{
-                    //    var userService = context.HttpContext.RequestServices.GetRequiredService<null>();
-                    //    string userId = context.Principal.Identity.Name;
-                    //    var user = userService.GetUserById(userId);
-                    //    if (user == null)
-                    //    {
-                    //        context.Fail("Unauthorized");
-                    //    }
-                    //    return Task.CompletedTask;
-                    //}
-                };
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });            
+                    Version = "v1",
+                    Title = "Magalu-Roger",
+                    Description = "A simple test api"
+
+                });
+
+                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                //{
+                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                //    Name = "Authorization",
+                //    In = "header",
+                //    Type = "apiKey"
+                //});
+            });
 
             services.AddMvc();                      
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {          
+        {           
+            app.UseSwagger();            
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Magalu-Roger V1");
+            });
+
             //EM PRODUCÃO DEVE-SE REMOVER OS CORS
             app.UseCors(x => x
                 .AllowAnyOrigin()
@@ -107,6 +145,14 @@ namespace ApiMagalu
 
             app.UseMvc();
         }
+
+        //public class ApiKeyScheme
+        //{
+        //    public string Description { get; set; }
+        //    public string Name { get; set; }
+        //    public string In { get; set; }
+        //    public string Type { get; set; }
+        //}
     }
 }
 
