@@ -1,0 +1,28 @@
+﻿<p><a [routerLink]="['/login']">Logout</a></p>
+<h1>Hi {{currentUser.username}}!</h1>
+<h3>Produtos Magalu para {{cliente.nome}}:</h3>
+<div>
+    <table class="table">
+        <thead>
+          <tr>            
+            <th scope="col">Produto</th>
+            <th scope="col">Preço</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let podutos of produtos"> 
+          <tr>   
+            <input type="hidden" name="produto.id" value={{produto.id}} />        
+            <td>{{produto.titulo}}</td>
+            <td>{{produto.preco}}</td>
+            <td><img src="produto.imagem"></td>            
+            <td><a [routerLink]="['/']" (click)="addFavorito(produto.id)"></a></td>            
+          </tr>          
+        </tbody>
+      </table>
+</div>
+
+

@@ -12,6 +12,6 @@ namespace Entities.MagaluApiProdutos
         
         public string Imagem { get; set; }
        
-        public decimal Preco { get; set; }
+        public double Preco { get; set; }
     }
 }

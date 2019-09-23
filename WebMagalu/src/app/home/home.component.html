@@ -1,0 +1,31 @@
+﻿<p><a [routerLink]="['/login']">Logout</a></p>
+<h1>Hi {{currentUser.username}}!</h1>
+<p><a [routerLink]="['/saveCliente']">Adicionar Cliente</a></p>
+<h3>Clientes Magalu:</h3>
+<div>
+    <table class="table">
+        <thead>
+          <tr>            
+            <th scope="col">Nome</th>
+            <th scope="col">Email</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody *ngFor="let cliente of clientes"> 
+          <tr>   
+            <input type="hidden" name="cliente.id" value={{cliente.id}} />        
+            <td>{{cliente.nome}}</td>
+            <td>{{cliente.email}}</td>
+            <td><a [routerLink]="['/']" (click)="deleteCliente(cliente.id)" >Delete</a></td>
+            <td><a [routerLink]="['/saveCliente']" [queryParams]="{id: cliente.id,  nome:cliente.nome, email:cliente.email}">Atualizar</a></td>
+            <td><a [routerLink]="['/listFavoritos']"  [queryParams]="{id: cliente.id,  nome:cliente.nome}" >Listar produtos favoritos</a></td>
+            <td><a [routerLink]="['/addFavoritos']" [queryParams]="{id: cliente.id,  nome:cliente.nome}">Adicionar produtos favoritos</a></td>
+          </tr>          
+        </tbody>
+      </table>
+</div>
+
+

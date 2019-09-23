@@ -27,11 +27,9 @@ namespace ApiMagalu
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
+               
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
+        {            
             services.AddCors();
             // ===== Add our DbContext ========
             services.AddDbContext<MagaluDbContext>();
@@ -48,7 +46,8 @@ namespace ApiMagalu
                 sp.GetRequiredService<IOptions<MongoDBSettings>>().Value);
 
             services.AddSingleton<ClientesService>();
-           
+            services.AddSingleton<ProdutosService>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddAutoMapper();
 
@@ -89,6 +88,8 @@ namespace ApiMagalu
                     ValidateAudience = false
                 };
             });
+
+            services.AddMvc();
 
             services.AddScoped<IAdminService, AdminService>();
         }

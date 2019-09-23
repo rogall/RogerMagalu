@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Entities.MagaluApiProdutos;
 using EntitiesMongo;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,15 +18,19 @@ namespace ApiMagalu.Controllers
     public class ClientesController : ControllerBase
     {
         private readonly IClientesService _clientesService;
+        private readonly IProdutosService _produtosService;
 
-        public ClientesController(ClientesService clientesService)
+        public ClientesController(ClientesService clientesService, ProdutosService produtosService)
         {
             _clientesService = clientesService;
+            _produtosService = produtosService;
         }
 
         [HttpGet]
         public ActionResult<List<Cliente>> Get()
         {
+            //var prod = _produtosService.GetProduto("958ec015-cfcf-258d-c6df-1721de0ab6ea");
+            var prods = _produtosService.GetProdutos(1);
             var ret = _clientesService.GetAllClientes();
             return ret;
         }
@@ -86,6 +91,20 @@ namespace ApiMagalu.Controllers
             _clientesService.DeleteCliente(cliente);
 
             return NoContent();
+        }
+
+        [HttpGet(Name = "GetProdutos")]
+        public async Task<List<Produto>> GetProdutos(int pagination)
+        {
+            var ret = await _produtosService.GetProdutos(pagination);
+            return ret;
+        }
+
+        [HttpGet(Name = "GetProduto")]
+        public async Task<Produto> GetProduto(string id)
+        {
+            var ret = await _produtosService.GetProduto(id);
+            return ret;
         }
     }
 }

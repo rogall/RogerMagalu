@@ -27,6 +27,6 @@ namespace Entities.Mongo
         public string Imagem { get; set; }
 
         [BsonElement("Preco")]
-        public decimal Preco { get; set; }
+        public double Preco { get; set; }
     }
 }

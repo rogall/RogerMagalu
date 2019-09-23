@@ -14,8 +14,6 @@ namespace ApiMagalu
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseUrls("http://localhost:4000")
-                .Build();
-
-            
+                .Build();            
     }
 }
