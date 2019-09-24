@@ -22,6 +22,12 @@ namespace Services.Concrete
             _clientesService = service;
         }
 
+        /// <summary>
+        /// Um simples request para recuperar produtos e ao mesmo tempo marcar o que o cliente tem como favoritos
+        /// </summary>
+        /// <param name="pagination"></param>
+        /// <param name="idCliente"></param>
+        /// <returns></returns>
         public async Task<List<Produto>> GetProdutos(int pagination, string idCliente)
         {
             //primeiramente recupero os produtos da lista de favoritos
@@ -61,6 +67,11 @@ namespace Services.Concrete
             return result;
         }
         
+        /// <summary>
+        /// Request para recuperar um produto pelo seu id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<Produto> GetProduto(string id)
         {            
             String ret = string.Empty;
@@ -86,6 +97,9 @@ namespace Services.Concrete
     }
 }
 
+/// <summary>
+/// Classes para parsear o JSON que vem da api https://gist.github.com/Bgouveia/9e043a3eba439489a35e70d1b5ea08ec
+/// </summary>
 public class Meta
 {
     public int page_number { get; set; }

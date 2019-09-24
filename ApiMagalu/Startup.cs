@@ -17,6 +17,8 @@ using Settings;
 using System;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ApiMagalu
 {
@@ -104,14 +106,14 @@ namespace ApiMagalu
                     .RequireAuthenticatedUser().Build());
             });
 
-            // Register the Swagger generator, defining 1 or more Swagger documents
+            // Registrando swagger 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
                     Title = "Magalu-Roger",
-                    Description = "A simple test api"
+                    Description = "Api Teste Roger Teixeira"
 
                 });
 
@@ -122,6 +124,10 @@ namespace ApiMagalu
                     In = "header",
                     Type = "apiKey"
                 });
+
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer", Enumerable.Empty<string>() },
+                });
             });
 
             services.AddMvc();                      
@@ -129,8 +135,8 @@ namespace ApiMagalu
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {           
+            //iniciando swagger
             app.UseSwagger();
-            
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Magalu-Roger V1");

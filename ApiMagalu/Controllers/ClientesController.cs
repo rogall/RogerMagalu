@@ -15,9 +15,13 @@ namespace ApiMagalu.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    //[Authorize("Bearer")]
+    [Authorize("Bearer")]
     public class ClientesController : ControllerBase
     {
+        /// <summary>
+        /// Controller com operacões para CRUD de clientes conforme o documento
+        /// E uma operacao para adicionar um produto ou remove-lo da lista de favoritos
+        /// </summary>
         private readonly IClientesService _clientesService;
         private readonly IProdutosService _produtosService;
 
@@ -54,24 +58,26 @@ namespace ApiMagalu.Controllers
 
             if (clienteEmail == null)
             {
+                cliente.Id = string.Empty;
                 _clientesService.CreateCliente(cliente);
                 return NoContent();
             }
             else
-                return NotFound();
+                return Ok("Email já utilizado");
         }
 
         [HttpPut("{id:length(24)}")]
         public IActionResult Update(string id, Cliente clIn)
         {
-            var cliente = _clientesService.GetClienteById(id);
-
-            if (cliente == null)
+            var pCliente = _clientesService.GetClienteById(id);
+            var anyCliente = _clientesService.GetClienteByEmail(clIn.Email);
+            
+            if(clIn.Email == anyCliente.Email && pCliente.Id != anyCliente.Id)
             {
-                return NotFound();
+                return Ok("Email já utilizado");
             }
 
-            clIn.Email = cliente.Email;
+            clIn.Email = pCliente.Email;
             _clientesService.UpdateCliente(id, clIn);
 
             return NoContent();

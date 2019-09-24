@@ -12,6 +12,10 @@ using Services.Interface;
 
 namespace ApiMagalu.Controllers
 {
+
+    //Criei essa controler para utilizar na web app que construi para testar a api de teste Magalu
+    //https://gist.github.com/Bgouveia/9e043a3eba439489a35e70d1b5ea08ec
+
     [Route("[controller]")]
     [ApiController]
     [Authorize("Bearer")]
