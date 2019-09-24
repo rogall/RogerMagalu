@@ -23,7 +23,7 @@ Para testar o desenvolvimento siga os seguintes passos:
 
 5.Executar docker compose up em cmd nessa localizacão para instalar a imagem do MySQL:
 
-6.No visual studio TOOLS => NUGET PACKAGE MANAGER => PACKAGE MANAGER CONSOLE e execute o seguinte comando para criar a imagem do MySQL:
+6.No visual studio TOOLS => NUGET PACKAGE MANAGER => PACKAGE MANAGER CONSOLE e execute o seguinte comando para criar as tabelas no MySQL:
 
   #EntityFrameworkCore\Update-Database -Verbose
 
