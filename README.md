@@ -19,7 +19,9 @@ Para testar o desenvolvimento siga os seguintes passos:
 
 3.Colocar o projeto ApiMAgalu como principal (Set as StartUp Project)
 
-4.Na pasta raiz existe o arquivo docker-compose.yml
+4.Na pasta raiz existe o arquivo docker-compose.yml (É necessário ter o docker for windows instalado).
+
+https://hub.docker.com/?overlay=onboarding
 
 5.Executar docker compose up em cmd nessa localizacão para instalar a imagem do MySQL:
 
@@ -54,6 +56,9 @@ https://github.com/rogall/RogerMagalu/tree/master/WebMagalu
 Para utiliza-la, recomendo o Visual Studio Code como editor/IDE
 
 Abra a pasta com o VS code, abra um terminal e execute o comando -npm install- para baixar as dependências e em seguida execute o comando -npm start-
+
+Para que essa aplicacão acesse a api, tive que habilitar o CORS, mas em caso de colocar em um ambiente de producão, essa feature deve ser removida.
+
 
 Muito Obrigado!
 
