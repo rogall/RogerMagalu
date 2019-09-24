@@ -4,20 +4,12 @@ Api de teste de cadastro de clientes
 
 Linguagens e tecnologias utilizadas
 
-Asp.Net Core C#
-
-Visual Studio 2019
-
-Visual Studio Code
-
-Swagger (para documentar a api)
-
-Angular 6 / TypeScript
+Asp.Net Core C# | Visual Studio 2019 | Visual Studio Code | Swagger (para documentar a api) | Angular 6 / TypeScript
 
 Docker(comimagem MySQL para cadastro de admin e imagem MongoDB para cadastro de clientes e lista de favoritos)
 
 
-
+======================================================================================
 
 Para testar o desenvolvimento siga os seguintes passos:
 
@@ -49,6 +41,7 @@ Para testar o desenvolvimento siga os seguintes passos:
 
 9.Depois disso é só testar as outras transacoes.
 
+=========================================================================================
 #Observacão:
 
 Não foi pedido, mas eu criei uma simples aplicacão em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
