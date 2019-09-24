@@ -17,7 +17,7 @@ Para testar o desenvolvimento siga os seguintes passos:
 
 2.Com o Visual Studio fazer o build do projeto para que o Nuget baixe as dependências.
 
-3.Colocar o projeto ApiMAgalu como principal (Set as StartUp Project)
+3.Colocar o projeto ApiMagalu como principal (Set as StartUp Project)
 
 4.Na pasta raiz existe o arquivo docker-compose.yml (É necessário ter o docker for windows instalado).
 
