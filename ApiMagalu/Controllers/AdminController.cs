@@ -134,6 +134,7 @@ namespace MagaluApi.Controllers
         {
             if (_userManager.FindByEmailAsync(user.Email).Result == null)
             {
+                user.Id = Guid.NewGuid().ToString();
                 var resultado = _userManager
                     .CreateAsync(user, password).Result;
 

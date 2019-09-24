@@ -107,7 +107,7 @@ namespace ApiMagalu
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo
+                c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
                     Title = "Magalu-Roger",
@@ -115,13 +115,13 @@ namespace ApiMagalu
 
                 });
 
-                //c.AddSecurityDefinition("Bearer", new ApiKeyScheme
-                //{
-                //    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                //    Name = "Authorization",
-                //    In = "header",
-                //    Type = "apiKey"
-                //});
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
             });
 
             services.AddMvc();                      
@@ -129,7 +129,8 @@ namespace ApiMagalu
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {           
-            app.UseSwagger();            
+            app.UseSwagger();
+            
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Magalu-Roger V1");
@@ -143,16 +144,10 @@ namespace ApiMagalu
 
             app.UseAuthentication();
 
-            app.UseMvc();
-        }
+            app.UseStaticFiles();
 
-        //public class ApiKeyScheme
-        //{
-        //    public string Description { get; set; }
-        //    public string Name { get; set; }
-        //    public string In { get; set; }
-        //    public string Type { get; set; }
-        //}
+            app.UseMvc();
+        }       
     }
 }
 

@@ -15,7 +15,7 @@ namespace ApiMagalu.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    [Authorize("Bearer")]
+    //[Authorize("Bearer")]
     public class ClientesController : ControllerBase
     {
         private readonly IClientesService _clientesService;
