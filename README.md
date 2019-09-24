@@ -6,7 +6,7 @@ Linguagens e tecnologias utilizadas
 
 Asp.Net Core C# | Visual Studio 2019 | Visual Studio Code | Swagger (para documentar a api) | Angular 6 / TypeScript
 
-Docker(comimagem MySQL para cadastro de admin e imagem MongoDB para cadastro de clientes e lista de favoritos)
+Docker(com imagem MySQL para cadastro de admin e imagem MongoDB para cadastro de clientes e lista de favoritos)
 
 
 ======================================================================
