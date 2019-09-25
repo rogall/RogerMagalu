@@ -36,33 +36,43 @@ namespace Services.Concrete
 
             String ret = string.Empty;
             List<Produto> result = new List<Produto>();
-            ListProducts list = null;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://challenge-api.luizalabs.com/api/product/?page=" + pagination.ToString());            
-            using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                ret = await reader.ReadToEndAsync();
-                DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ListProducts));
-                MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(ret));
-                list = (ListProducts)serializer.ReadObject(ms);
-            }          
 
-            if (list != null && list.products != null && list.products.Count > 0)
+            try
             {
-                foreach (var item in list.products)
+                ListProducts list = null;
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://challenge-api.luizalabs.com/api/product/?page=" + pagination.ToString());
+                using (HttpWebResponse response = (HttpWebResponse)await request.GetResponseAsync())
+                using (Stream stream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(stream))
                 {
-                    Produto p = new Produto();
-                    p.IdProduto = item.id;
-                    p.Imagem = item.image;
-                    p.Preco = item.price;
-                    p.Titulo = item.title;
+                    ret = await reader.ReadToEndAsync();
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ListProducts));
+                    MemoryStream ms = new MemoryStream(Encoding.UTF8.GetBytes(ret));
+                    list = (ListProducts)serializer.ReadObject(ms);
+                }
 
-                    //se o produto da lista da magalu estiver na lista de favoritos do cliente, setar favorito = true
-                    p.IsFavorito = ids.Contains(p.IdProduto);
-                    result.Add(p);
+                if (list != null && list.products != null && list.products.Count > 0)
+                {
+                    foreach (var item in list.products)
+                    {
+                        Produto p = new Produto();
+                        p.IdProduto = item.id;
+                        p.Imagem = item.image;
+                        p.Preco = item.price;
+                        p.Titulo = item.title;
+
+                        //se o produto da lista da magalu estiver na lista de favoritos do cliente, setar favorito = true
+                        p.IsFavorito = ids.Contains(p.IdProduto);
+                        result.Add(p);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                //24/09 22:35 não estava conectando na api http://challenge-api.luizalabs.com, então estou retornando uma lista vazia
+                //Entrei na url https://gist.github.com/Bgouveia/9e043a3eba439489a35e70d1b5ea08ec e realmente estava fora do ar
+                return result;
+            }            
 
             return result;
         }

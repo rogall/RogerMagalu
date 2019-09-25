@@ -18,7 +18,7 @@ namespace ApiMagalu.Controllers
 
     [Route("[controller]")]
     [ApiController]
-    [Authorize("Bearer")]
+    //[Authorize("Bearer")]
     public class ProdutosController : ControllerBase
     {
         private readonly IProdutosService _produtosService;       

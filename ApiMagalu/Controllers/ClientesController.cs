@@ -71,10 +71,13 @@ namespace ApiMagalu.Controllers
         {
             var pCliente = _clientesService.GetClienteById(id);
             var anyCliente = _clientesService.GetClienteByEmail(clIn.Email);
-            
-            if(clIn.Email == anyCliente.Email && pCliente.Id != anyCliente.Id)
+
+            if (anyCliente != null)
             {
-                return Ok("Email já utilizado");
+                if (clIn.Email == anyCliente.Email && pCliente.Id != anyCliente.Id)
+                {
+                    return Ok("Email já utilizado");
+                }
             }
 
             clIn.Email = pCliente.Email;
