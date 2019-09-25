@@ -23,13 +23,13 @@ Para testar o desenvolvimento siga os seguintes passos:
 
 https://hub.docker.com/?overlay=onboarding
 
-5.Executar docker compose up em cmd nessa localizacão para instalar a imagem do MySQL:
+5.Executar docker compose up em cmd nessa localização para instalar a imagem do MySQL:
 
 6.No visual studio TOOLS => NUGET PACKAGE MANAGER => PACKAGE MANAGER CONSOLE e execute o seguinte comando para criar as tabelas no MySQL:
 
   EntityFrameworkCore\Update-Database -Verbose
 
-5.Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faca a conexão para o cadastro de clientes:
+5.Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
 
   docker run -d -p 27017-27019:27017-27019 --name rogermagalu mongo:4.0.4
 
@@ -39,15 +39,15 @@ https://hub.docker.com/?overlay=onboarding
 
 7.A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
 
-8.Em seguida deve executar a transacao /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN, copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
+8.Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN, copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
 
-9.Depois disso é só testar as outras transacoes.
+9.Depois disso é só testar as outras transações.
 
 ===================================================================
 
 #Observacão:
 
-Não foi pedido, mas eu criei uma simples aplicacão em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
+Não foi pedido, mas eu criei uma simples aplicação em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
 
 Ela se encontra em:
 
@@ -58,6 +58,15 @@ Para utiliza-la, recomendo o Visual Studio Code como editor/IDE
 Abra a pasta com o VS code, abra um terminal e execute o comando -npm install- para baixar as dependências e em seguida execute o comando -npm start-
 
 Para que essa aplicacão acesse a api, tive que habilitar o CORS, mas em caso de colocar em um ambiente de producão, essa feature deve ser removida.
+
+Considerações finais:
+
+O cadastro de clientes é feito por um usuário admin para que fosse implementado a autenticação, autorização e tokenização.
+
+Em um outo cenário  eu abriria esse cadastro para o próprio cliente, e o persistiria na mesma tabela do admin e os diferenciaria através de perfil de acesso, ou aguardaria para conhecer as estruturas de perfilamento da Magalu.
+
+Utilizando o banco que eu implementei, isso seria feito com a tabela aspNetRoles.
+
 
 
 Muito Obrigado!
