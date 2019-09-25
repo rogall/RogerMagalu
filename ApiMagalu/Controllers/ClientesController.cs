@@ -166,8 +166,9 @@ namespace ApiMagalu.Controllers
             }
         }
 
+        ///Este método eu utilizei Task para ressaltar a performance comparando com os outros métodos        
         [HttpGet]
-        [Route("GetListaProdutosFavoritos")]
+        [Route("GetListaProdutosFavoritos")]      
         public async Task<ActionResult<List<ProdutoCliente>>> GetListaProdutosFavoritos(string idCliente)
         {
             try
