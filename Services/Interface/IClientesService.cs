@@ -3,6 +3,7 @@ using EntitiesMongo;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Services.Interface
 {
@@ -17,5 +18,6 @@ namespace Services.Interface
         void RemoveProduto(string idP, string idC);
         List<ProdutoCliente> GetProdutosByClienteId(string id);
         Cliente GetClienteByEmail(string email);
+        Task<List<ProdutoCliente>> GetProdutosFavoritosCliente(string idCliente);
     }
 }

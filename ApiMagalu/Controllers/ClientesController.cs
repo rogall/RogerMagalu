@@ -165,5 +165,20 @@ namespace ApiMagalu.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet]
+        [Route("GetListaProdutosFavoritos")]
+        public async Task<ActionResult<List<ProdutoCliente>>> GetListaProdutosFavoritos(string idCliente)
+        {
+            try
+            {
+                var ret = await _clientesService.GetProdutosFavoritosCliente(idCliente);
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

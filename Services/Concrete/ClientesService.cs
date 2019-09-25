@@ -6,6 +6,7 @@ using Services.Interface;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Services.Concrete
 {
@@ -58,5 +59,10 @@ namespace Services.Concrete
         public List<ProdutoCliente> GetProdutosByClienteId(string id) =>
            _produtosClientes.Find(_produtosClientes => _produtosClientes.IdCliente == id).ToList();
 
+        //Este método eu utilizei Task para ressaltar a performance comparando com os outros métodos
+        public Task<List<ProdutoCliente>> GetProdutosFavoritosCliente(string idCliente)
+        {
+            return _produtosClientes.Find(p => p.IdCliente == idCliente).ToListAsync();
+        }
     }
 }
