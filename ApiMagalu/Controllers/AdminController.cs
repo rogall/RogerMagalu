@@ -121,7 +121,7 @@ namespace MagaluApi.Controllers
             try
             {
                 CreateUser(user, userDto.Password);
-                return NoContent();
+                return Ok();
             }
             catch (Exception ex)
             {

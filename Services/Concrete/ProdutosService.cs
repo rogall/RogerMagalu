@@ -69,9 +69,7 @@ namespace Services.Concrete
             }
             catch (Exception ex)
             {
-                //24/09 22:35 não estava conectando na api http://challenge-api.luizalabs.com, então estou retornando uma lista vazia
-                //Entrei na url https://gist.github.com/Bgouveia/9e043a3eba439489a35e70d1b5ea08ec e realmente estava fora do ar
-                return result;
+                throw ex;
             }            
 
             return result;

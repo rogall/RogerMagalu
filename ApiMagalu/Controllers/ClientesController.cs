@@ -33,95 +33,137 @@ namespace ApiMagalu.Controllers
 
         [HttpGet]
         public ActionResult<List<Cliente>> Get()
-        {           
-            var ret = _clientesService.GetAllClientes();
-            return ret;
+        {
+            try
+            {
+                var ret = _clientesService.GetAllClientes();
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpGet("{id:length(24)}", Name = "GetCliente")]
         public ActionResult<Cliente> Get(string id)
         {
-            var cliente = _clientesService.GetClienteById(id);
-
-            if (cliente == null)
+            try
             {
-                return NotFound();
-            }
+                var cliente = _clientesService.GetClienteById(id);
 
-            return cliente;
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                return cliente;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPost]
         public ActionResult Create(Cliente cliente)
         {
-            var clienteEmail = _clientesService.GetClienteByEmail(cliente.Email);
-
-            if (clienteEmail == null)
+            try
             {
-                cliente.Id = string.Empty;
-                _clientesService.CreateCliente(cliente);
-                return NoContent();
+                var clienteEmail = _clientesService.GetClienteByEmail(cliente.Email);
+
+                if (clienteEmail == null)
+                {
+                    cliente.Id = string.Empty;
+                    _clientesService.CreateCliente(cliente);
+                    return NoContent();
+                }
+                else
+                    return Ok("Email já utilizado");
             }
-            else
-                return Ok("Email já utilizado");
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPut("{id:length(24)}")]
         public IActionResult Update(string id, Cliente clIn)
         {
-            var pCliente = _clientesService.GetClienteById(id);
-            var anyCliente = _clientesService.GetClienteByEmail(clIn.Email);
-
-            if (anyCliente != null)
+            try
             {
-                if (clIn.Email == anyCliente.Email && pCliente.Id != anyCliente.Id)
+                var pCliente = _clientesService.GetClienteById(id);
+                var anyCliente = _clientesService.GetClienteByEmail(clIn.Email);
+
+                if (anyCliente != null)
                 {
-                    return Ok("Email já utilizado");
+                    if (clIn.Email == anyCliente.Email && pCliente.Id != anyCliente.Id)
+                    {
+                        return Ok("Email já utilizado");
+                    }
                 }
+
+                clIn.Email = pCliente.Email;
+                _clientesService.UpdateCliente(id, clIn);
+
+                return Ok("Atualizado com sucesso!");
             }
-
-            clIn.Email = pCliente.Email;
-            _clientesService.UpdateCliente(id, clIn);
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("{id:length(24)}")]
         public IActionResult Delete(string id)
         {
-            var cliente = _clientesService.GetClienteById(id);
-
-            if (cliente == null)
+            try
             {
-                return NotFound();
+                var cliente = _clientesService.GetClienteById(id);
+
+                if (cliente == null)
+                {
+                    return NotFound();
+                }
+
+                var ret = _clientesService.GetProdutosByClienteId(id);
+
+                foreach (var item in ret)
+                {
+                    _clientesService.RemoveProduto(item.IdProduto, id);
+                }
+
+                _clientesService.DeleteCliente(cliente);
+
+                return NoContent();
             }
-
-            var ret = _clientesService.GetProdutosByClienteId(id);
-
-            foreach (var item in ret)
+            catch (Exception ex)
             {
-                _clientesService.RemoveProduto(item.IdProduto, id);
+                return BadRequest(new { message = ex.Message });
             }
-
-            _clientesService.DeleteCliente(cliente);
-
-            return NoContent();
         }
 
         [HttpPost]
         [Route("AddOrRemoveProduto")]
         public ActionResult AddOrRemoveProduto(ProdutoCliente pc)
         {
-            if (pc.Tipo == "1")
-            {             
-                _clientesService.AddProduto(pc);
-            }
-            else
+            try
             {
-                _clientesService.RemoveProduto(pc.IdProduto, pc.IdCliente);
-            }
+                if (pc.Tipo == "1")
+                {
+                    _clientesService.AddProduto(pc);
+                }
+                else
+                {
+                    _clientesService.RemoveProduto(pc.IdProduto, pc.IdCliente);
+                }
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
     }
 }

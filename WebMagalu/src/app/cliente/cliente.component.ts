@@ -31,7 +31,7 @@ export class ClienteComponent implements OnInit {
                 nome: [nome, Validators.required]
             });
 
-            this.registerForm.controls["email"].disable();
+            //this.registerForm.controls["email"].disable();
         }
         else
         {            
@@ -41,7 +41,7 @@ export class ClienteComponent implements OnInit {
                 nome: ['', Validators.required]                
             });
 
-            this.registerForm.controls["email"].enable();
+            //this.registerForm.controls["email"].enable();
         }
     }
 
@@ -66,8 +66,9 @@ export class ClienteComponent implements OnInit {
                     this.router.navigate(['/']);
                 },
                 error => {                    
-                    this.alertService.error("Email já utilizado");
+                    //this.alertService.error("Email já utilizado");
                     this.loading = false;
+                    this.router.navigate(['/']);
                 });
         }
         else{
