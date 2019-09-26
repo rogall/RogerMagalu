@@ -42,7 +42,7 @@ Linguagens e tecnologias utilizadas:
 
 9. A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
 
-10. Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN. 
+10. Em seguida, executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN. 
 
 11. Copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
 
