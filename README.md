@@ -32,7 +32,7 @@ Linguagens e tecnologias utilizadas:
 
     #### EntityFrameworkCore\Update-Database -Verbose
 
-7. Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
+7. Novamente em um cmd, executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
 
     #### docker run -d -p 27017-27019:27017-27019 --name rogermagalu mongo:4.0.4
 
