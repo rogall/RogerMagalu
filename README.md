@@ -2,7 +2,7 @@
 
 ## Api de teste de cadastro de clientes
 
-Linguagens e tecnologias utilizadas
+Linguagens e tecnologias utilizadas:
 
 * Asp.Net Core C# 
 * Visual Studio 2019 
@@ -42,9 +42,11 @@ Linguagens e tecnologias utilizadas
 
 9. A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
 
-10. Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN, copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
+10. Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN. 
 
-11. Depois disso é só testar as outras transações.
+11. Copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
+
+12. Depois disso é só testar as outras transações.
 
 
 
