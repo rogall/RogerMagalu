@@ -26,25 +26,25 @@ Linguagens e tecnologias utilizadas
 
 https://hub.docker.com/?overlay=onboarding
 
-5.Executar docker compose up em cmd nessa localização para instalar a imagem do MySQL:
+5. Executar docker compose up em cmd nessa localização para instalar a imagem do MySQL:
 
 6. No visual studio TOOLS => NUGET PACKAGE MANAGER => PACKAGE MANAGER CONSOLE e execute o seguinte comando para criar as tabelas no MySQL:
 
   #### EntityFrameworkCore\Update-Database -Verbose
 
-5. Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
+7. Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
 
   #### docker run -d -p 27017-27019:27017-27019 --name rogermagalu mongo:4.0.4
 
-6. Executar o start no visual studio e acessar o seguinte endereco:
+8. Executar o start no visual studio e acessar o seguinte endereco:
 
   #### http://localhost:4000/swagger/index.html
 
-7. A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
+9. A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
 
-8. Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN, copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
+10. Em seguida deve executar a transação /ADMIN/LOGIN para que o usuário receba um BEARER TOKEN, copie o token e clique no cadeado no topo da página para inserir o token da seguinte forma: Bearer {token}
 
-9. Depois disso é só testar as outras transações.
+11. Depois disso é só testar as outras transações.
 
 
 
