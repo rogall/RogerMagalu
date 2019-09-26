@@ -1,4 +1,4 @@
-# RogerMagalu
+# Roger Teixeira - Magalu Desafio
 
 ## Api de teste de cadastro de clientes
 
@@ -24,21 +24,21 @@ Linguagens e tecnologias utilizadas
 
 4. Na pasta raiz existe o arquivo docker-compose.yml (É necessário ter o docker for windows instalado).
 
-https://hub.docker.com/?overlay=onboarding
+    #### https://hub.docker.com/?overlay=onboarding
 
 5. Executar docker compose up em cmd nessa localização para instalar a imagem do MySQL:
 
 6. No visual studio TOOLS => NUGET PACKAGE MANAGER => PACKAGE MANAGER CONSOLE e execute o seguinte comando para criar as tabelas no MySQL:
 
-  #### EntityFrameworkCore\Update-Database -Verbose
+    #### EntityFrameworkCore\Update-Database -Verbose
 
 7. Executar o seguinte comando para criar um banco MongoDB para que a aplicacão faça a conexão para o cadastro de clientes:
 
-  #### docker run -d -p 27017-27019:27017-27019 --name rogermagalu mongo:4.0.4
+    #### docker run -d -p 27017-27019:27017-27019 --name rogermagalu mongo:4.0.4
 
 8. Executar o start no visual studio e acessar o seguinte endereco:
 
-  #### http://localhost:4000/swagger/index.html
+    #### http://localhost:4000/swagger/index.html
 
 9. A primeira transacão a ser executada deve ser a /ADMIN/REGISTER para que se crie um usuário admin para os propósitos de teste
 
