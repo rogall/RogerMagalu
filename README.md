@@ -1,6 +1,6 @@
 # RogerMagalu
 
-Api de teste de cadastro de clientes
+## Api de teste de cadastro de clientes
 
 Linguagens e tecnologias utilizadas
 
@@ -9,9 +9,9 @@ Asp.Net Core C# | Visual Studio 2019 | Visual Studio Code | Swagger (para docume
 Docker(com imagem MySQL para cadastro de admin e imagem MongoDB para cadastro de clientes e lista de favoritos)
 
 
-======================================================================
 
-Para testar o desenvolvimento siga os seguintes passos:
+
+## Para testar o desenvolvimento siga os seguintes passos:
 
 1.Fazer o download dos artefatos para máquina local.
 
@@ -43,9 +43,9 @@ https://hub.docker.com/?overlay=onboarding
 
 9.Depois disso é só testar as outras transações.
 
-===================================================================
 
-#Observacão:
+
+## Observacão:
 
 Não foi pedido, mas eu criei uma simples aplicação em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
 
@@ -59,7 +59,7 @@ Abra a pasta com o VS code, abra um terminal e execute o comando -npm install- p
 
 Para que essa aplicacão acesse a api, tive que habilitar o CORS, mas em caso de colocar em um ambiente de producão, essa feature deve ser removida.
 
-Considerações finais:
+## Considerações finais:
 
 O cadastro de clientes é feito por um usuário admin para que fosse implementado a autenticação, autorização e tokenização.
 
@@ -69,7 +69,7 @@ Utilizando o banco que eu implementei, isso seria feito com a tabela aspNetRoles
 
 
 
-Muito Obrigado!
+## Muito Obrigado!
 
 
 
