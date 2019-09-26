@@ -1,6 +1,6 @@
 # Roger Teixeira - Magalu Desafio
 
-## Api de teste de cadastro de clientes
+## Api de cadastro de clientes
 
 Linguagens e tecnologias utilizadas:
 
