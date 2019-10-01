@@ -36,12 +36,15 @@ namespace ApiMagalu.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Cliente>> Get()
+        public ActionResult<List<ClienteDTO>> Get()
         {
             try
             {
                 var ret = _clientesService.GetAllClientes();
-                return ret;
+
+                var retDTO = _mapper.Map<List<ClienteDTO>>(ret);
+
+                return retDTO;
             }
             catch (Exception ex)
             {
@@ -50,18 +53,19 @@ namespace ApiMagalu.Controllers
         }
 
         [HttpGet("{id:length(24)}", Name = "GetCliente")]
-        public ActionResult<Cliente> Get(string id)
+        public ActionResult<ClienteDTO> Get(string id)
         {
             try
             {
                 var cliente = _clientesService.GetClienteById(id);
+                var retDTO = _mapper.Map<ClienteDTO>(cliente);
 
                 if (cliente == null)
                 {
                     return NotFound();
                 }
 
-                return cliente;
+                return retDTO;
             }
             catch (Exception ex)
             {
@@ -70,10 +74,12 @@ namespace ApiMagalu.Controllers
         }
 
         [HttpPost]
-        public ActionResult Create(Cliente cliente)
+        public ActionResult Create(ClienteDTO clienteDTO)
         {
             try
             {
+                var cliente = _mapper.Map<Cliente>(clienteDTO);
+
                 var clienteEmail = _clientesService.GetClienteByEmail(cliente.Email);
 
                 if (clienteEmail == null)
@@ -92,10 +98,11 @@ namespace ApiMagalu.Controllers
         }
 
         [HttpPut("{id:length(24)}")]
-        public IActionResult Update(string id, Cliente clIn)
+        public IActionResult Update(string id, ClienteDTO clienteDTO)
         {
             try
             {
+                var clIn = _mapper.Map<Cliente>(clienteDTO);
                 var pCliente = _clientesService.GetClienteById(id);
                 var anyCliente = _clientesService.GetClienteByEmail(clIn.Email);
 
@@ -171,15 +178,17 @@ namespace ApiMagalu.Controllers
             }
         }
 
-        ///Este método eu utilizei Task para ressaltar a performance comparando com os outros métodos        
+        ///Este método eu utilizei Task para ressaltar a performance comparando com os outros métodos   
+        /// pagination seria para dividir o request em blocos     
         [HttpGet]
-        [Route("GetListaProdutosFavoritos")]      
-        public async Task<ActionResult<List<ProdutoCliente>>> GetListaProdutosFavoritos(string idCliente)
+        [Route("GetListaProdutosFavoritos")]       
+        public async Task<ActionResult<List<ProdutoClienteDTO>>> GetListaProdutosFavoritos(string idCliente, int pagination)
         {
             try
             {
                 var ret = await _clientesService.GetProdutosFavoritosCliente(idCliente);
-                return ret;
+                var retDTO = _mapper.Map<List<ProdutoClienteDTO>>(ret);
+                return retDTO;
             }
             catch (Exception ex)
             {

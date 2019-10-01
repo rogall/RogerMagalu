@@ -17,6 +17,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiMagalu", "ApiMagalu\ApiM
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{38829620-C18E-4650-8DC3-B0505BFD7AD5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4.Tests", "4.Tests", "{2E45C018-E35E-47C1-86CF-C99F73A26065}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services.Tests", "Tests\Services.Tests.csproj", "{F4F983A9-62F1-4304-AAEA-644C4165B614}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +43,10 @@ Global
 		{38829620-C18E-4650-8DC3-B0505BFD7AD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38829620-C18E-4650-8DC3-B0505BFD7AD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38829620-C18E-4650-8DC3-B0505BFD7AD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4F983A9-62F1-4304-AAEA-644C4165B614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4F983A9-62F1-4304-AAEA-644C4165B614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4F983A9-62F1-4304-AAEA-644C4165B614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4F983A9-62F1-4304-AAEA-644C4165B614}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +56,7 @@ Global
 		{058833B2-E65B-4D7C-9D5D-670B25F61393} = {59430591-E0FF-4B86-AFD5-AE74ED9A78A6}
 		{7AE8B723-A289-494F-BC93-DD5DC248F591} = {31938B7C-FBE4-4CED-BEF6-98F673E017D8}
 		{38829620-C18E-4650-8DC3-B0505BFD7AD5} = {4546F199-7FA1-446A-A2DD-FCBAB2F73DE3}
+		{F4F983A9-62F1-4304-AAEA-644C4165B614} = {2E45C018-E35E-47C1-86CF-C99F73A26065}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C9E6A1A9-9AFA-446D-9ABE-6F194DF50CBA}

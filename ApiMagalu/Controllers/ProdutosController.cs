@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using DTOs;
 using Entities.MagaluApiProdutos;
 using Entities.Mongo;
 using Microsoft.AspNetCore.Authorization;
@@ -18,22 +20,25 @@ namespace ApiMagalu.Controllers
 
     [Route("[controller]")]
     [ApiController]
-    //[Authorize("Bearer")]
+    [Authorize("Bearer")]
     public class ProdutosController : ControllerBase
     {
-        private readonly IProdutosService _produtosService;       
-
-        public ProdutosController(ProdutosService produtosService)
+        private readonly IProdutosService _produtosService;
+        private IMapper _mapper;
+               
+        public ProdutosController(ProdutosService produtosService, IMapper mapper)
         {
-            _produtosService = produtosService;         
+            _produtosService = produtosService;
+            _mapper = mapper;
         }
 
         [HttpGet]
         [Route("GetProdutos")]
-        public async Task<List<Produto>> GetProdutos(int id, string idCliente)
+        public async Task<List<ProdutoDTO>> GetProdutos(int id, string idCliente)
         {
             var ret = await _produtosService.GetProdutos(id, idCliente);
-            return ret;
+            var retDTO = _mapper.Map<List<ProdutoDTO>>(ret);
+            return retDTO;
         }        
     }
 }

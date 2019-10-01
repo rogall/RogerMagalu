@@ -22,6 +22,11 @@ namespace Services.Concrete
             _clientesService = service;
         }
 
+        public ProdutosService()
+        {
+
+        }
+
         /// <summary>
         /// Um simples request para recuperar produtos e ao mesmo tempo marcar o que o cliente tem como favoritos
         /// </summary>
