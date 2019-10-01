@@ -56,13 +56,7 @@ namespace ApiMagalu
             services.AddSingleton<ProdutosService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddAutoMapper();
-
-            var appSettingsSection = Configuration.GetSection("AppSettings");
-            services.Configure<AppSettings>(appSettingsSection);
-
-            //jwt authentication
-            var appSettings = appSettingsSection.Get<AppSettings>();
+            services.AddAutoMapper();           
 
             services.Configure<IdentityOptions>(options =>
             {                

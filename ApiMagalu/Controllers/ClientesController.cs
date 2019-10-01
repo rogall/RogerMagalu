@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using DTOs;
 using Entities.MagaluApiProdutos;
 using Entities.Mongo;
 using EntitiesMongo;
@@ -24,11 +26,13 @@ namespace ApiMagalu.Controllers
         /// </summary>
         private readonly IClientesService _clientesService;
         private readonly IProdutosService _produtosService;
+        private IMapper _mapper;
 
-        public ClientesController(ClientesService clientesService, ProdutosService produtosService)
+        public ClientesController(ClientesService clientesService, ProdutosService produtosService, IMapper mapper)
         {
             _clientesService = clientesService;
             _produtosService = produtosService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -145,8 +149,9 @@ namespace ApiMagalu.Controllers
 
         [HttpPost]
         [Route("AddOrRemoveProduto")]
-        public ActionResult AddOrRemoveProduto(ProdutoCliente pc)
+        public ActionResult AddOrRemoveProduto(ProdutoClienteDTO pcDTO)
         {
+            var pc = _mapper.Map<ProdutoCliente>(pcDTO);
             try
             {
                 if (pc.Tipo == "1")
