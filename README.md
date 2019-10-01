@@ -48,9 +48,9 @@ Linguagens e tecnologias utilizadas:
 
 12. Depois disso é só testar as outras transações.
 
+## Observacões:
 
-
-## Observacão:
+Foi criado um projeto de exemplo para testes unitários com xUnit.
 
 Não foi pedido, mas eu criei uma simples aplicação em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
 
