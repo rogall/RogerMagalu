@@ -50,7 +50,7 @@ Linguagens e tecnologias utilizadas:
 
 ## Observacões:
 
-Foi criado um projeto de exemplo para testes unitários com xUnit.
+Foi criado um projeto de exemplo para testes unitários com xUnit em https://github.com/rogall/RogerMagalu/tree/master/Tests
 
 Não foi pedido, mas eu criei uma simples aplicação em Angular 6 para testar melhor as regras de negócio e fazer o consumo da api para simular um cliente.
 
